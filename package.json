@@ -1,0 +1,17 @@
+{
+  "name": "kakao-admin-assistant",
+  "version": "1.0.0",
+  "description": "E2E testing infrastructure for KakaoTalk Admin Assistant",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "PORT=8080 node src/server.js",
+    "mcp": "PORT=8080 node src/mcp_server.js",
+    "test": "PORT=8080 node tests/e2e_runner.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "express": "^4.19.2",
+    "playwright": "^1.45.0"
+  }
+}

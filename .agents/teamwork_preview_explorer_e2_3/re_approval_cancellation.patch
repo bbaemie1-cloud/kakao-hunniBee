@@ -1,0 +1,65 @@
+diff --git a/src/automation/taskManager.js b/src/automation/taskManager.js
+index a1b2c3d..e4f5g6h 100000
+--- a/src/automation/taskManager.js
++++ b/src/automation/taskManager.js
+@@ -68,4 +68,17 @@ class TaskManager {
+     task.deferred = null;
+     return { success: true, message: 'Resume signal received. Processing captcha...' };
+   }
++
++  cancelTask(taskId, reason = 'Cancelled') {
++    const task = this.getTask(taskId);
++    if (!task) return { success: false, error: 'Task not found' };
++    if (task.status === 'COMPLETED' || task.status === 'FAILED') {
++      return { success: false, error: `Task is already in terminal state: ${task.status}` };
++    }
++    task.status = 'FAILED';
++    task.error = reason;
++    if (task.deferred) {
++      task.deferred.resolve('CANCELLED');
++      task.deferred = null;
++    }
++    return { success: true, message: `Task ${taskId} cancelled successfully` };
++  }
+ }
+ 
+ module.exports = new TaskManager();
+diff --git a/src/server.js b/src/server.js
+index b2c3d4e..f5g6h7i 100000
+--- a/src/server.js
++++ b/src/server.js
+@@ -44,6 +44,14 @@ app.post('/api/kakao/webhook', (req, res) => {
+     amount: 10000000
+   };
+ 
++  // Cancel any existing active tasks for the same user to handle re-approval cancellation
++  const userEmail = `${user.id}@example.com`;
++  for (const t of taskManager.tasks.values()) {
++    if (t.formData && t.formData.email === userEmail && (t.status === 'RUNNING' || t.status === 'PAUSED_SECURITY')) {
++      taskManager.cancelTask(t.taskId, 'Cancelled by new re-approval request');
++    }
++  }
++
+   taskManager.createTask(taskId, formData);
+ 
+   // Trigger automation asynchronously
+@@ -90,6 +98,18 @@ app.post('/api/automation/resume', (req, res) => {
+   return res.json(result);
+ });
+ 
++// Automation Cancel API (Internal/Test tool)
++app.post('/api/automation/cancel', (req, res) => {
++  const { taskId, reason } = req.body || {};
++  if (!taskId) {
++    return res.status(400).json({ success: false, error: 'Missing taskId' });
++  }
++  const result = taskManager.cancelTask(taskId, reason || 'Cancelled by client request');
++  if (!result.success) {
++    return res.status(result.error.includes('not found') ? 404 : 400).json(result);
++  }
++  return res.json(result);
++});
++
+ // Task Status Monitoring Endpoint (Internal)
+ app.get('/api/automation/status/:taskId', (req, res) => {
+   const { taskId } = req.params;

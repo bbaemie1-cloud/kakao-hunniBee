@@ -1,0 +1,69 @@
+diff --git a/src/automation/browser.js b/src/automation/browser.js
+index a123456..b789101 100644
+--- a/src/automation/browser.js
++++ b/src/automation/browser.js
+@@ -22,6 +22,15 @@ async function runAutomation(taskId, serverPort) {
+     await page.fill('#email', task.formData.email || 'hong@example.com');
+     await page.fill('#amount', String(task.formData.amount || 10000000));
+     
++    // Check form validity before clicking submit to avoid HTML5 validation hangs
++    const isValid = await page.evaluate(() => {
++      const form = document.querySelector('#loan-form');
++      return form ? form.checkValidity() : true;
++    });
++    if (!isValid) {
++      throw new Error('Form validation failed in browser');
++    }
++
+     // Submit the form and wait for the redirect
+     await Promise.all([
+       page.click('#submit-btn'),
+@@ -32,6 +41,9 @@ async function runAutomation(taskId, serverPort) {
+     if (currentUrl.includes('secure.html')) {
+       // Pause task waiting for resume
+       const captchaCode = await taskManager.pauseTask(taskId);
++      if (captchaCode === 'CANCELLED') {
++        throw new Error('Task was cancelled');
++      }
+ 
+       // Once resolved, type captcha code and submit
+       await page.fill('#captcha', captchaCode);
+diff --git a/src/automation/taskManager.js b/src/automation/taskManager.js
+index c123456..d789101 100644
+--- a/src/automation/taskManager.js
++++ b/src/automation/taskManager.js
+@@ -37,6 +37,16 @@ class TaskManager {
+     if (!task) throw new Error(`Task ${taskId} not found`);
+ 
+     task.status = 'PAUSED_SECURITY';
+     task.captchaText = captchaText;
+ 
++    if (task.deferred) {
++      task.deferred.resolve('CANCELLED');
++    }
++
++    if (timeoutMs <= 0) {
++      task.status = 'FAILED';
++      task.error = 'Task paused due to security check timed out';
++      return Promise.reject(new Error('Task paused due to security check timed out'));
++    }
++
+     if (task.timeoutId) {
+       clearTimeout(task.timeoutId);
+     }
+diff --git a/src/server.js b/src/server.js
+index e123456..f789101 100644
+--- a/src/server.js
++++ b/src/server.js
+@@ -148,6 +148,10 @@ app.post('/api/submit-form', (req, res) => {
+   if (!task) {
+     return res.status(404).send('Task not found');
+   }
+ 
++  if (task.status === 'COMPLETED' || task.status === 'FAILED') {
++    return res.status(400).send(`Cannot submit form for task in terminal state: ${task.status}`);
++  }
++
+   // Validate form fields for boundary testing
+   if (!name || name.trim().length === 0) {
+     taskManager.updateTask(taskId, { status: 'FAILED', error: 'Validation failed: Name is empty' });

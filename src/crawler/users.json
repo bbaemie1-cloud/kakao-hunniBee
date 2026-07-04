@@ -1,0 +1,27 @@
+[
+  {
+    "id": "user_1",
+    "name": "홍길동",
+    "age": 28,
+    "job": "소상공인",
+    "housing": "무주택",
+    "notified_policies": {
+      "api_mock_1": {
+        "last_notified_at": "2026-07-03T20:40:28.157Z",
+        "count": 1
+      },
+      "scrape_mock_1": {
+        "last_notified_at": "2026-07-03T20:40:28.157Z",
+        "count": 1
+      },
+      "api_mock_2": {
+        "last_notified_at": "2026-07-03T20:40:28.157Z",
+        "count": 1
+      },
+      "scrape_mock_0": {
+        "last_notified_at": "2026-07-03T20:40:28.158Z",
+        "count": 1
+      }
+    }
+  }
+]

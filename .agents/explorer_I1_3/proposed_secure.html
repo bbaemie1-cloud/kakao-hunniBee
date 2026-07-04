@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보안 확인 - 캡차 인증</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f6fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #d93025;
+        }
+        p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .captcha-box {
+            background-color: #e8eaed;
+            padding: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            user-select: none;
+            border: 1px dashed #9aa0a6;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: center;
+        }
+        input:focus {
+            outline: none;
+            border-color: #d93025;
+        }
+        .error-message {
+            color: #d93025;
+            font-size: 13px;
+            margin-top: 5px;
+            height: 18px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #d93025;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #b02318;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generate a random 6-digit captcha code and put it in the target element
+            const generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+            document.getElementById('captchaCode').textContent = generatedCode;
+
+            const form = document.getElementById('captchaForm');
+            const input = document.getElementById('captchaInput');
+            const errorDiv = document.getElementById('errorMessage');
+
+            form.addEventListener('submit', (e) => {
+                if (input.value.trim() !== generatedCode) {
+                    e.preventDefault();
+                    errorDiv.textContent = '보안 문자가 올바르지 않습니다. 다시 입력해 주세요.';
+                    input.focus();
+                } else {
+                    errorDiv.textContent = '';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>보안 문자 입력 (CAPTCHA)</h1>
+        <p>비정상적인 접근 방지를 위해 화면에 보이는 보안 문자를 입력해 주세요.</p>
+        
+        <div class="captcha-box">
+            <span id="captchaCode"></span>
+        </div>
+
+        <form id="captchaForm" action="/success.html" method="GET">
+            <div class="form-group">
+                <label for="captchaInput">보안 문자 입력</label>
+                <input type="text" id="captchaInput" name="captchaInput" autocomplete="off" required placeholder="6자리 숫자 입력">
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+            <button type="submit" id="submitCaptcha">입력 완료</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Security Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .btn-group {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #error-msg {
+      color: red;
+      margin-top: 15px;
+      display: none;
+      font-weight: bold;
+    }
+    #captcha-image {
+      background-color: #f0f0f0;
+      padding: 15px;
+      text-align: center;
+      font-size: 18px;
+      border: 1px dashed #aaa;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Security Captcha Verification</h1>
+  <p>Please enter the captcha code displayed below to verify your session.</p>
+  
+  <div id="captcha-image">
+    Captcha Code: 
+    <span id="captcha-code"></span> 
+    <span id="captchaCode"></span> 
+    <span id="captcha-val"></span>
+  </div>
+
+  <form id="captcha-form" action="/api/submit-captcha" method="POST">
+    <input type="hidden" name="taskId" id="taskId">
+    
+    <div class="form-group">
+      <label for="captcha">Enter Captcha:</label>
+      <input type="text" id="captcha" name="captcha">
+    </div>
+
+    <div class="btn-group">
+      <button type="submit" id="verify-btn">Verify</button>
+    </div>
+  </form>
+
+  <div id="error-msg"></div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const taskId = urlParams.get('taskId');
+    if (taskId) {
+      document.getElementById('taskId').value = taskId;
+    }
+
+    function setCaptcha(code) {
+      const codeSpan = document.getElementById('captcha-code');
+      const newSpan1 = document.getElementById('captchaCode');
+      const newSpan2 = document.getElementById('captcha-val');
+      if (codeSpan) codeSpan.textContent = code;
+      if (newSpan1) newSpan1.textContent = code;
+      if (newSpan2) newSpan2.textContent = code;
+    }
+
+    // Load captcha code
+    if (taskId) {
+      fetch('/api/automation/captcha/' + taskId, {
+        headers: {
+          'Authorization': 'Bearer mock-secret-token-123'
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          setCaptcha(data.captcha);
+        })
+        .catch(err => console.error('Error fetching captcha:', err));
+    }
+  </script>
+</body>
+</html>

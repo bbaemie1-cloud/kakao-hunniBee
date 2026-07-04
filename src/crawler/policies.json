@@ -1,0 +1,38 @@
+[
+  {
+    "id": "api_mock_1",
+    "title": "청년 맞춤형 전월세 대출 지원",
+    "category": "대출",
+    "target_audience": "만 19세~34세 무주택 청년",
+    "benefits": "최대 1억원 전월세 보증금 대출 (연 1.2% ~ 2.1%)",
+    "deadline": "상시 모집",
+    "source_url": "https://www.hf.go.kr/hf/sub01/sub01_01_01.do"
+  },
+  {
+    "id": "api_mock_2",
+    "title": "소상공인 새희망자금 (가상)",
+    "category": "사업",
+    "target_audience": "연매출 4억 이하 소상공인",
+    "benefits": "최대 200만원 현금 지원",
+    "deadline": "2026-12-31",
+    "source_url": "https://www.semas.or.kr/"
+  },
+  {
+    "id": "scrape_mock_0",
+    "title": "[공고] 2026 청년 내일채움공제 신규가입 안내",
+    "category": "취업/사업",
+    "target_audience": "만 15세 이상 34세 이하 중소기업 정규직 취업 청년",
+    "benefits": "2년간 300만원 납입 시 1200만원 수령",
+    "deadline": "2026-08-31",
+    "source_url": "http://localhost:8080/mock_notices.html#id1"
+  },
+  {
+    "id": "scrape_mock_1",
+    "title": "[안내] 신혼부부 주택구입자금 대출 우대금리 확대",
+    "category": "부동산",
+    "target_audience": "혼인기간 7년 이내 무주택 세대주",
+    "benefits": "최대 3억원 대출, 연 1.5%~2.45% 적용",
+    "deadline": "상시",
+    "source_url": "http://localhost:8080/mock_notices.html#id2"
+  }
+]
