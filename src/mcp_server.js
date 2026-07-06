@@ -8,7 +8,7 @@ const { searchPolicies, recommendPoliciesForUser } = require('./crawler/db');
 const { getUser } = require('./crawler/user_db');
 
 const server = new Server({
-  name: "kakao-admin-assistant-mcp",
+  name: "honeybee-admin-assistant-mcp",
   version: "1.0.0"
 }, {
   capabilities: {

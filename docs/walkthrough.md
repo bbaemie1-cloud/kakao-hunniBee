@@ -1,4 +1,4 @@
-# Kakao Admin Assistant - Hackathon Project
+# Honeybee Admin Assistant - Hackathon Project
 
 This application is built for the **Kakao AGENTIC PLAYER 10** hackathon. It provides an AI-driven online administrative assistant via an MCP server architecture.
 

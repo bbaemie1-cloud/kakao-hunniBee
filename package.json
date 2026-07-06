@@ -1,7 +1,7 @@
 {
-  "name": "kakao-admin-assistant",
+  "name": "honeybee-admin-assistant",
   "version": "1.0.0",
-  "description": "E2E testing infrastructure for KakaoTalk Admin Assistant",
+  "description": "E2E testing infrastructure for Honeybee Admin Assistant",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {

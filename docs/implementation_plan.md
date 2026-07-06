@@ -1,4 +1,4 @@
-# Kakao Admin Assistant - Master Implementation Plan (Hackathon)
+# Honeybee Admin Assistant - Master Implementation Plan (Hackathon)
 
 이 문서는 카카오 **AGENTIC PLAYER 10** 해커톤 출품을 위해 개발된 프로젝트의 전체 아키텍처와 모든 세부 구현 기능(크롤링, 알림, 브라우저 자동화, MCP 연동)을 종합한 마스터 기획/설계 문서입니다.
 
