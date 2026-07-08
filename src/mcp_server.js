@@ -134,18 +134,28 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 
 // SSE Endpoints for MCP
-let transport;
+const transports = new Map();
+
 app.get('/sse', async (req, res) => {
-  transport = new SSEServerTransport('/messages', res);
+  const sessionId = `session-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  const transport = new SSEServerTransport(`/messages?sessionId=${sessionId}`, res);
+  transports.set(sessionId, transport);
   await server.connect(transport);
-  console.log('MCP SSE Client connected');
+  console.log(`MCP SSE Client connected: ${sessionId}`);
+
+  req.on('close', () => {
+    console.log(`MCP SSE Client disconnected: ${sessionId}`);
+    transports.delete(sessionId);
+  });
 });
 
 app.post('/messages', async (req, res) => {
+  const sessionId = req.query.sessionId;
+  const transport = transports.get(sessionId);
   if (transport) {
     await transport.handlePostMessage(req, res);
   } else {
-    res.status(400).send("No active SSE connection");
+    res.status(404).send("Session not found or no active SSE connection");
   }
 });
 
