@@ -16,6 +16,14 @@ app.use((req, res, next) => {
 // Serve static pages
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Health check endpoint for Kakao Cloud Load Balancer
+app.get('/', (req, res) => {
+  res.status(200).send('Honeybee MCP Server is running!');
+});
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Store port
 let serverPort = 3000;
 
