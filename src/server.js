@@ -221,18 +221,19 @@ app.post('/api/test/create-task', (req, res) => {
 
 // Start server function so we can export it or run directly
 function startServer(port) {
-  serverPort = port || 3000;
+  serverPort = port || 8080;
   return new Promise((resolve) => {
-    const server = app.listen(serverPort, () => {
+    // Bind to 0.0.0.0 to ensure it accepts external connections in Docker/Cloud
+    const server = app.listen(serverPort, '0.0.0.0', () => {
       resolve(server);
     });
   });
 }
 
 if (require.main === module) {
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 8080;
   startServer(port).then(() => {
-    console.log(`Mock server running on port ${port}`);
+    console.log(`Mock server running on port ${port} (0.0.0.0)`);
   });
 }
 

@@ -161,9 +161,9 @@ app.post('/messages', async (req, res) => {
 
 // If run directly, start the server
 if (require.main === module) {
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 8080;
   startServer(port).then(() => {
-    console.log(`[MCP Server] Running on port ${port}`);
+    console.log(`[MCP Server] Running on port ${port} (0.0.0.0)`);
     console.log(`[MCP Server] SSE Endpoint available at: http://localhost:${port}/sse`);
   });
 }
