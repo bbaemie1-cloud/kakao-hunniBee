@@ -63,6 +63,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             keyword: { type: "string", description: "Search keyword (e.g. 전월세, 소상공인)" },
             category: { type: "string", description: "Category filter (e.g. 대출, 취업/사업, 부동산)" }
+          }
         }
       },
       {
