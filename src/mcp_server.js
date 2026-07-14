@@ -149,7 +149,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 // SSE Endpoints for MCP
 const transports = new Map();
 
-app.get('/sse', async (req, res) => {
+const sseHandler = async (req, res) => {
   const sessionId = `session-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   
   // Construct absolute URL to prevent cross-origin clients from resolving relative to their own domain
@@ -160,13 +160,16 @@ app.get('/sse', async (req, res) => {
   const transport = new SSEServerTransport(endpointUrl, res);
   transports.set(sessionId, transport);
   await server.connect(transport);
-  console.log(`MCP SSE Client connected: ${sessionId}`);
+  console.log(`MCP SSE Client connected: ${sessionId} (Path: ${req.path})`);
 
   req.on('close', () => {
     console.log(`MCP SSE Client disconnected: ${sessionId}`);
     transports.delete(sessionId);
   });
-});
+};
+
+app.get('/sse', sseHandler);
+app.get('/mcp', sseHandler);
 
 app.post('/messages', async (req, res) => {
   const sessionId = req.query.sessionId;
