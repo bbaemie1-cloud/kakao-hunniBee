@@ -17,11 +17,18 @@ const server = new Server({
 });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
+  const defaultAnnotations = {
+    readOnlyHint: "false",
+    destructiveHint: "false",
+    openWorldHint: "false",
+    idempotentHint: "false"
+  };
+
   return {
     tools: [
       {
         name: "start_application",
-        description: "Starts the Kakao loan application process using headless browser automation.",
+        description: "[Honeybee(허니비)] Starts the loan application process using headless browser automation.",
         inputSchema: {
           type: "object",
           properties: {
@@ -30,22 +37,24 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             amount: { type: "number", description: "Loan amount" }
           },
           required: ["name", "email", "amount"]
-        }
+        },
+        annotations: { ...defaultAnnotations, title: "Start Application" }
       },
       {
         name: "check_status",
-        description: "Checks the status of an application task. Use this to poll for PAUSED_SECURITY status.",
+        description: "[Honeybee(허니비)] Checks the status of an application task. Use this to poll for PAUSED_SECURITY status.",
         inputSchema: {
           type: "object",
           properties: {
             taskId: { type: "string", description: "The task ID returned from start_application" }
           },
           required: ["taskId"]
-        }
+        },
+        annotations: { ...defaultAnnotations, title: "Check Status", readOnlyHint: "true", idempotentHint: "true" }
       },
       {
         name: "resume_application",
-        description: "Resumes the application by submitting a Captcha code when the task is PAUSED_SECURITY.",
+        description: "[Honeybee(허니비)] Resumes the application by submitting a Captcha code when the task is PAUSED_SECURITY.",
         inputSchema: {
           type: "object",
           properties: {
@@ -53,29 +62,32 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             captchaCode: { type: "string" }
           },
           required: ["taskId", "captchaCode"]
-        }
+        },
+        annotations: { ...defaultAnnotations, title: "Resume Application" }
       },
       {
         name: "search_policies",
-        description: "Searches for government support policies crawled from public APIs and websites.",
+        description: "[Honeybee(허니비)] Searches for government support policies crawled from public APIs and websites.",
         inputSchema: {
           type: "object",
           properties: {
             keyword: { type: "string", description: "Search keyword (e.g. 전월세, 소상공인)" },
             category: { type: "string", description: "Category filter (e.g. 대출, 취업/사업, 부동산)" }
           }
-        }
+        },
+        annotations: { ...defaultAnnotations, title: "Search Policies", readOnlyHint: "true", idempotentHint: "true" }
       },
       {
         name: "get_recommendations",
-        description: "Gets personalized proactive policy recommendations for a specific user.",
+        description: "[Honeybee(허니비)] Gets personalized proactive policy recommendations for a specific user.",
         inputSchema: {
           type: "object",
           properties: {
             userId: { type: "string", description: "The ID of the user (e.g. user_1)" }
           },
           required: ["userId"]
-        }
+        },
+        annotations: { ...defaultAnnotations, title: "Get Recommendations", readOnlyHint: "true", idempotentHint: "true" }
       }
     ]
   };
