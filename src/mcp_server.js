@@ -28,7 +28,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: "start_application",
-        description: "[Honeybee(허니비)] Starts the loan application process using headless browser automation.",
+        description: "[HunniBee(허니비)] Starts the loan application process using headless browser automation.",
         inputSchema: {
           type: "object",
           properties: {
@@ -42,7 +42,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "check_status",
-        description: "[Honeybee(허니비)] Checks the status of an application task. Use this to poll for PAUSED_SECURITY status.",
+        description: "[HunniBee(허니비)] Checks the status of an application task. Use this to poll for PAUSED_SECURITY status.",
         inputSchema: {
           type: "object",
           properties: {
@@ -54,7 +54,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "resume_application",
-        description: "[Honeybee(허니비)] Resumes the application by submitting a Captcha code when the task is PAUSED_SECURITY.",
+        description: "[HunniBee(허니비)] Resumes the application by submitting a Captcha code when the task is PAUSED_SECURITY.",
         inputSchema: {
           type: "object",
           properties: {
@@ -67,7 +67,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "search_policies",
-        description: "[Honeybee(허니비)] Searches for government support policies crawled from public APIs and websites.",
+        description: "[HunniBee(허니비)] Searches for government support policies crawled from public APIs and websites.",
         inputSchema: {
           type: "object",
           properties: {
@@ -79,7 +79,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "get_recommendations",
-        description: "[Honeybee(허니비)] Gets personalized proactive policy recommendations for a specific user.",
+        description: "[HunniBee(허니비)] Gets personalized proactive policy recommendations for a specific user.",
         inputSchema: {
           type: "object",
           properties: {
