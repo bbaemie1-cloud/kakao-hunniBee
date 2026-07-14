@@ -151,7 +151,13 @@ const transports = new Map();
 
 app.get('/sse', async (req, res) => {
   const sessionId = `session-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-  const transport = new SSEServerTransport(`/messages?sessionId=${sessionId}`, res);
+  
+  // Construct absolute URL to prevent cross-origin clients from resolving relative to their own domain
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+  const host = req.headers['x-forwarded-host'] || req.get('host');
+  const endpointUrl = `${protocol}://${host}/messages?sessionId=${sessionId}`;
+  
+  const transport = new SSEServerTransport(endpointUrl, res);
   transports.set(sessionId, transport);
   await server.connect(transport);
   console.log(`MCP SSE Client connected: ${sessionId}`);
@@ -171,6 +177,15 @@ app.post('/messages', async (req, res) => {
     res.status(404).send("Session not found or no active SSE connection");
   }
 });
+
+// Optional Stdio transport for local MCP Inspector testing
+const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
+if (process.argv.includes('--stdio')) {
+  const stdioTransport = new StdioServerTransport();
+  server.connect(stdioTransport).then(() => {
+    console.error("[MCP Server] Running on stdio transport for local inspection");
+  });
+}
 
 // If run directly, start the server
 if (require.main === module) {
