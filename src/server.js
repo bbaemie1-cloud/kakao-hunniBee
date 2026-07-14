@@ -1,9 +1,11 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const taskManager = require('./automation/taskManager');
 const { runAutomation } = require('./automation/browser');
 
 const app = express();
+app.use(cors()); // Allow PlayMCP console to connect via SSE
 app.use((req, res, next) => {
   if (req.path === '/messages') return next();
   express.json()(req, res, next);
